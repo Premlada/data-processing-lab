@@ -1,63 +1,102 @@
-import csv, os
+import csv
+import os
 
-__location__ = os.path.realpath(
-    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+# Load Cities.csv
+__location__ = os.path.dirname(os.path.abspath(__file__))
 
 cities = []
-with open(os.path.join(__location__, 'Cities.csv')) as f:
+with open(
+    os.path.join(__location__, "Cities.csv"),
+    newline="",
+    encoding="utf-8-sig"
+) as f:
     rows = csv.DictReader(f)
     for r in rows:
         cities.append(dict(r))
+
+
+# Function to filter dictionaries
+def filter_items(condition, dict_list):
+    return [item for item in dict_list if condition(item)]
+
+
+# Function to aggregate values
+def aggregate(aggregation_key, aggregation_function, dict_list):
+    values = [item[aggregation_key] for item in dict_list]
+    return aggregation_function(values)
+
 
 # Print first 5 cities only
 for city in cities[:5]:
     print(city)
 
-# Print the average temperature of all the cities
+
+# 1. Print the average temperature of all the cities
 print("The average temperature of all the cities:")
-temps = [float(city['temperature']) for city in cities]
-print(sum(temps) / len(temps))
+average_temperature = aggregate(
+    "temperature",
+    lambda temps: sum(float(t) for t in temps) / len(temps),
+    cities
+)
+print(average_temperature)
 print()
 
-# Print all cities in Germany
+
+# 2. Print all cities in Germany
 print("All cities in Germany:")
-for city in cities:
-    if city['country'] == 'Germany':
-        print(city['city'])
+germany = filter_items(
+    lambda city: city["country"] == "Germany",
+    cities
+)
+for city in germany:
+    print(city["city"])
 print()
 
-# Print all cities in Spain with a temperature above 12°C
+
+# 3. Print all cities in Spain with a temperature above 12°C
 print("Cities in Spain with temperature above 12°C:")
-for city in cities:
-    if city['country'] == 'Spain' and float(city['temperature']) > 12:
-        print(city['city'])
+spain = filter_items(
+    lambda city: city["country"] == "Spain"
+    and float(city["temperature"]) > 12,
+    cities
+)
+for city in spain:
+    print(city["city"])
 print()
 
-# Count the number of unique countries
+
+# 4. Count the number of unique countries
 print("Number of unique countries:")
-countries = []
-for city in cities:
-    if city['country'] not in countries:
-        countries.append(city['country'])
-print(len(countries))
+number_of_countries = aggregate(
+    "country",
+    lambda countries: len(set(countries)),
+    cities
+)
+print(number_of_countries)
 print()
 
-# Print the average temperature for all the cities in Germany
+
+# 5. Print the average temperature for all the cities in Germany
 print("The average temperature in Germany:")
-germany_temps = []
-for city in cities:
-    if city['country'] == 'Germany':
-        germany_temps.append(float(city['temperature']))
-
-print(sum(germany_temps) / len(germany_temps))
+average_germany = aggregate(
+    "temperature",
+    lambda temps: sum(float(t) for t in temps) / len(temps),
+    germany
+)
+print(average_germany)
 print()
 
-# Print the max temperature for all the cities in Italy
-print("The maximum temperature in Italy:")
-italy_temps = []
-for city in cities:
-    if city['country'] == 'Italy':
-        italy_temps.append(float(city['temperature']))
 
-print(max(italy_temps))
+# 6. Print the max temperature for all the cities in Italy
+print("The maximum temperature in Italy:")
+italy = filter_items(
+    lambda city: city["country"] == "Italy",
+    cities
+)
+max_italy = aggregate(
+    "temperature",
+    lambda temps: max(float(t) for t in temps),
+    italy
+)
+print(max_italy)
 print()
