@@ -1,46 +1,27 @@
-# OOP Data Processing
+## 5. Commit 4: Database and Table Join
 
-## 1. Lab Overview
+### DB Class
 
-This lab converts procedural data processing code into Object-Oriented Programming (OOP).
+The DB class stores and searches tables.
 
-It uses Python classes to load CSV files and process tabular data. The program supports filtering and aggregating data.
+- `__init__()` initializes an empty list of tables.
+- `insert()` adds a Table object to the database.
+- `search()` finds a table by its name.
 
-## 2. Project Structure
+### Table Class (Additional Method)
 
-```text
-data-processing-lab/
-├── README.md
-├── Cities.csv
-└── data_processing.py
-```
+- `join()` combines two tables using a common key and returns a new Table object.
 
-## 3. Design Overview
+### Additional Dataset
 
-### DataLoader Class
+- `Countries.csv` contains country information, including population, EU membership, and coastline status.
 
-Responsible for loading data from CSV files.
+### Testing
 
-- `__init__()` initializes the base directory.
-- `load_csv()` reads a CSV file and returns a list of dictionaries.
-
-### Table Class
-
-Responsible for managing and processing tabular data.
-
-- `__init__()` initializes the table name and data.
-- `filter()` filters rows based on a given condition and returns a new Table.
-- `aggregate()` extracts values from a specified column and applies an aggregation function.
-
-## 4. How to Test and Run
-
-1. Make sure Python 3 is installed.
-2. Place `Cities.csv` and `data_processing.py` in the same directory.
-3. Open the terminal in the project directory.
-4. Run the following command:
+Run the program using:
 
 ```bash
 python3 data_processing.py
 ```
 
-The program displays the results of the data processing operations, including average temperature, filtering cities by country, counting unique countries, and finding maximum temperature.
+The program tests filtering, aggregation, database searching, and joining cities and countries tables.
